@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mijn Gazononderhoud</title>
+<style>
+:root {
+  --primary: #2d5a3d;
+  --primary-light: #4a7c59;
+  --primary-dark: #1e3d2a;
+  --secondary: #8bc34a;
+  --secondary-light: #a8d575;
+  --background: #f5f9f5;
+  --surface: #ffffff;
+  --text: #2d5a3d;
+  --text-light: #4a7c59;
+  --border: #d4e4d4;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --shadow: rgba(0,0,0,0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #8bc34a;
+    --primary-light: #a8d575;
+    --primary-dark: #689f38;
+    --secondary: #4a7c59;
+    --background: #1e1e1e;
+    --surface: #2d2d2d;
+    --text: #e0e0e0;
+    --text-light: #b0b0b0;
+    --border: #404040;
+    --shadow: rgba(0,0,0,0.3);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--primary);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 0.75rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.tab:hover { background: var(--primary-light); color: white; }
+.tab.active {
+  background: var(--primary);
+  color: white;
+  border-bottom-color: var(--primary);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.card h2, .card h3 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.card h3 { font-size: 1.1rem; }
+
+.weather-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.weather-item {
+  text-align: center;
+  padding: 0.75rem;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+.weather-item .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+.weather-item .label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.task-list {
+  list-style: none;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.task-item:last-child { border-bottom: none; }
+
+.task-checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--secondary);
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.task-content h4 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+
+.task-content p {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.task-content .tip {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  font-style: italic;
+}
+
+.advice-box {
+  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+  color: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+.advice-box h3 {
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.month-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.month-card:hover { box-shadow: 0 4px 12px var(--shadow); }
+
+.month-card.current {
+  border: 2px solid var(--secondary);
+  background: var(--background);
+}
+
+.month-card h3 {
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.settings-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.settings-form label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.settings-form input,
+.settings-form select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.settings-form input:focus,
+.settings-form select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover { background: var(--primary-dark); }
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--primary-dark);
+}
+
+.btn-secondary:hover { background: var(--secondary-light); }
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: var(--error);
+  background: rgba(244,67,54,0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  color: var(--success);
+  background: rgba(76,175,80,0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.chat-container {
+  max-height: 500px;
+  overflow-y: auto;
+  margin: 1rem 0;
+}
+
+.chat-message {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  max-width: 80%;
+}
+
+.chat-message.user {
+  background: var(--primary);
+  color: white;
+  margin-left: auto;
+  border-bottom-right-radius: 0;
+}
+
+.chat-message.assistant {
+  background: var(--background);
+  color: var(--text);
+  margin-right: auto;
+  border-bottom-left-radius: 0;
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.chat-input input:focus { outline: none; border-color: var(--primary); }
+
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  color: var(--text);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.toast.show { opacity: 1; }
+
+@media (max-width: 600px) {
+  .weather-info { grid-template-columns: repeat(2, 1fr); }
+  .month-grid { grid-template-columns: 1fr; }
+  .chat-message { max-width: 90%; }
+  header h1 { font-size: 1.5rem; }
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mijn Gazononderhoud</h1>
+  <p>Persoonlijk advies voor jouw gazon</p>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" data-tab="nu">Nu</button>
+    <button class="tab" data-tab="jaar">Jaaroverzicht</button>
+    <button class="tab" data-tab="chat">Vraag de adviseur</button>
+    <button class="tab" data-tab="instellingen">Instellingen</button>
+  </div>
+
+  <div class="tab-content active" id="nu">
+    <div class="card">
+      <h2>Huidige maand: <span id="current-month-name">Laden...</span></h2>
+      <div class="weather-section">
+        <h3>Weer in <span id="weather-location">Zwolle</span></h3>
+        <div id="weather-loading" class="weather-info">
+          <div class="weather-item"><div class="value">...</div><div class="label">Laden...</div></div>
+        </div>
+        <div id="weather-error" class="error-message hidden"></div>
+        <div id="weather-data" class="weather-info hidden"></div>
+      </div>
+      <div class="advice-box">
+        <h3>Advies van vandaag</h3>
+        <p id="advice-text">Laden weergegevens...</p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Taken voor deze maand</h2>
+      <div class="btn-group" style="margin-bottom: 1rem;">
+        <button id="request-notification" class="btn btn-secondary btn-sm">Schakel meldingen in</button>
+        <span id="notification-status" style="font-size: 0.9rem; color: var(--text-light);"></span>
+      </div>
+      <ul class="task-list" id="current-month-tasks"></ul>
+      <div class="btn-group">
+        <button id="export-ics" class="btn btn-secondary btn-sm">Exporteer naar agenda (.ics)</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">Exporteer herhalende jaarlijkse herinneringen voor je telefoonagenda.</p>
+    </div>
+  </div>
+
+  <div class="tab-content" id="jaar">
+    <div class="card">
+      <h2>Jaaroverzicht</h2>
+      <p style="margin-bottom: 1rem; color: var(--text-light);">Klik op een maand om de taken te zien.</p>
+      <div class="month-grid" id="month-grid"></div>
+    </div>
+    <div class="card hidden" id="month-detail-card">
+      <h2 id="month-detail-title">Maand</h2>
+      <ul class="task-list" id="month-detail-tasks"></ul>
+      <button class="btn btn-secondary btn-sm" id="back-to-overview" style="margin-top: 1rem;">Terug naar overzicht</button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="chat">
+    <div class="card">
+      <h2>Vraag het aan de gazonadviseur</h2>
+      <p style="margin-bottom: 1rem; color: var(--text-light);">Stel je vraag over gazononderhoud. De adviseur houdt rekening met je locatie, gazontype, het weer en de huidige maand.</p>
+      <div id="api-key-warning" class="error-message hidden">Voer een Mistral API-sleutel in bij Instellingen om deze functie te gebruiken.</div>
+      <div class="chat-container" id="chat-messages"></div>
+      <div class="chat-input">
+        <input type="text" id="chat-input-field" placeholder="Stel je vraag..." disabled>
+        <button class="btn btn-primary" id="chat-send" disabled>Versturen</button>
+      </div>
+      <div id="chat-loading" class="hidden" style="text-align: center; margin: 1rem 0;"><span class="loading"></span> Wachten op antwoord...</div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="instellingen">
+    <div class="card">
+      <h2>Instellingen</h2>
+      <form class="settings-form" id="settings-form">
+        <div>
+          <label for="gazontype">Gazontype</label>
+          <select id="gazontype">
+            <option value="schaduwgras">Schaduwgras</option>
+            <option value="zongras">Zongras</option>
+            <option value="sportgras">Sportgras</option>
+            <option value="siertugras">Siertugras</option>
+          </select>
+        </div>
+        <div>
+          <label for="aanlegmaand">Aangelegd in</label>
+          <select id="aanlegmaand">
+            <option value="">- Selecteer -</option>
+            <option value="01">Januari</option>
+            <option value="02">Februari</option>
+            <option value="03">Maart</option>
+            <option value="04">April</option>
+            <option value="05" selected>Mei</option>
+            <option value="06">Juni</option>
+            <option value="07">Juli</option>
+            <option value="08">Augustus</option>
+            <option value="09">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div>
+          <label for="aanlegjaar">Aanlegjaar</label>
+          <input type="number" id="aanlegjaar" min="2000" max="2030" value="2024">
+        </div>
+        <div>
+          <label><input type="checkbox" id="eerste-jaar" checked> Toon eerste jaar tips (gelijkmatig vochtig houden, niet te kort maaien)</label>
+        </div>
+        <div>
+          <label for="locatie">Locatie</label>
+          <input type="text" id="locatie" value="Zwolle" placeholder="Plaatsnaam">
+        </div>
+        <div>
+          <label for="lat">Latitude</label>
+          <input type="text" id="lat" value="52.5168" placeholder="52.5168">
+        </div>
+        <div>
+          <label for="lon">Longitude</label>
+          <input type="text" id="lon" value="6.0830" placeholder="6.0830">
+        </div>
+        <div>
+          <label for="maaihoogte">Standaard maaihoogte (cm)</label>
+          <input type="number" id="maaihoogte" min="1" max="10" step="0.5" value="5">
+        </div>
+        <div>
+          <label for="mistral-api-key">Mistral API-sleutel (voor chat)</label>
+          <input type="password" id="mistral-api-key" placeholder="xxxxxxxx">
+          <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">De sleutel wordt alleen lokaal opgeslagen. <a href="https://mistral.ai/" target="_blank" style="color: var(--secondary);">Haal een sleutel op</a></p>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" id="save-settings">Opslaan</button>
+          <button type="button" class="btn btn-secondary" id="reset-tasks">Taken resetten</button>
+        </div>
+      </form>
+      <div id="settings-saved" class="success-message hidden">Instellingen opgeslagen!</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Gazononderhoudsapp | Weerdata van Open-Meteo | AI door Mistral AI</p>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const MONTHS = [
+  { name: 'Januari', key: '01' },
+  { name: 'Februari', key: '02' },
+  { name: 'Maart', key: '03' },
+  { name: 'April', key: '04' },
+  { name: 'Mei', key: '05' },
+  { name: 'Juni', key: '06' },
+  { name: 'Juli', key: '07' },
+  { name: 'Augustus', key: '08' },
+  { name: 'September', key: '09' },
+  { name: 'Oktober', key: '10' },
+  { name: 'November', key: '11' },
+  { name: 'December', key: '12' }
+];
+
+const TASKS_PER_MONTH = {
+  '01': [
+    { title: 'Gras niet betreden bij vorst', description: 'Betreden van bevroren gras kan de grasmat beschadigen. Wacht tot de vorst uit de grond is.', tip: 'Handmaaier: houd de messen schoon en droog om roest te voorkomen.' },
+    { title: 'Takken en blad verwijderen', description: 'Verwijder afgevallen takken en blad om schimmelvorming te voorkomen.', tip: 'Gebruik een hark met zachte tanden.' },
+    { title: 'Messen van de handmaaier onderhouden', description: 'Laat de messen slijpen of onderhoud ze zelf voor een schone snede in het nieuwe seizoen.' }
+  ],
+  '02': [
+    { title: 'Gras niet betreden bij vorst', description: 'Betreden van bevroren gras kan de grasmat beschadigen.' },
+    { title: 'Takken en blad verwijderen', description: 'Verwijder afgevallen takken en blad om schimmelvorming te voorkomen.' },
+    { title: 'Messen van de handmaaier onderhouden', description: 'Laat de messen slijpen of onderhoud ze zelf.' }
+  ],
+  '03': [
+    { title: 'Eerste lichte maaibeurt (hoog)', description: 'Maaien op ongeveer 6-7 cm hoogte bij droog weer. Dit stimuleert nieuwe groei.', tip: 'Handmaaier: zorg dat de messen scherp zijn.' },
+    { title: 'Oud gras en blad voorzichtig harken', description: 'Verwijder dode grasresten en blad om licht en lucht bij de bodem te laten komen.', tip: 'Gebruik een gazonhark, niet te diep harken.' },
+    { title: 'Lichte voorjaarsbemesting (eind maart)', description: 'Gebruik een stikstofrijke meststof voor een goede start van het groeiseizoen.', tip: 'Bemest bij droog weer en geef daarna licht water.' }
+  ],
+  '04': [
+    { title: 'Wekelijks maaien op 5-6 cm', description: 'Schaduwgras houdt van iets langere halmen. Maai niet te kort om stress te voorkomen.', tip: 'Handmaaier: maai in overlappende banen.' },
+    { title: 'Kale plekken doorzaaien', description: 'Zaai schaduwgrasmengsel op kale plekken en houd vochtig tot ontkieming.', tip: 'Meng zaad met wat zand voor betere verspreiding.' },
+    { title: 'Vochtig houden', description: 'Zorg voor gelijkmatige vochtigheid, vooral bij jonge grasmatten.' }
+  ],
+  '05': [
+    { title: 'Wekelijks maaien', description: 'Houd het gazon op de gewenste hoogte. In mei groeit het gras snel.', tip: 'Handmaaier: reinig de messen na elk gebruik.' },
+    { title: 'Onkruid steken', description: 'Verwijder onkruid handmatig of met een onkruidsteek voor een mooi gazon.', tip: 'Steek onkruid bij de wortel uit.' },
+    { title: 'Bij droogte water geven', description: 'Geef diep water (1-2 cm) als het lang droog is. Liever minder vaak, maar wel diep.' }
+  ],
+  '06': [
+    { title: 'Maaihoogte omhoog (6 cm+)', description: 'In de zomer houdt langer gras beter vocht vast en is beter bestand tegen hitte.' },
+    { title: 'Niet maaien in hitte', description: 'Maaien bij temperaturen boven 25°C kan het gras verzwakken.' },
+    { title: 'Bij droogte water geven', description: 'Geef diep water (1-2 cm) als het lang droog is.' },
+    { title: 'Niet bemesten in de zomer', description: 'Bemesten in de zomer kan het gras verbranden. Wacht tot het najaar.' }
+  ],
+  '07': [
+    { title: 'Maaihoogte omhoog (6 cm+)', description: 'In de zomer houdt langer gras beter vocht vast en is beter bestand tegen hitte.' },
+    { title: 'Niet maaien in hitte', description: 'Maaien bij temperaturen boven 25°C kan het gras verzwakken.' },
+    { title: 'Bij droogte water geven', description: 'Geef diep water (1-2 cm) als het lang droog is.' },
+    { title: 'Niet bemesten in de zomer', description: 'Bemesten in de zomer kan het gras verbranden.' }
+  ],
+  '08': [
+    { title: 'Maaihoogte omhoog (6 cm+)', description: 'In de zomer houdt langer gras beter vocht vast en is beter bestand tegen hitte.' },
+    { title: 'Niet maaien in hitte', description: 'Maaien bij temperaturen boven 25°C kan het gras verzwakken.' },
+    { title: 'Bij droogte water geven', description: 'Geef diep water (1-2 cm) als het lang droog is.' },
+    { title: 'Niet bemesten in de zomer', description: 'Bemesten in de zomer kan het gras verbranden.' }
+  ],
+  '09': [
+    { title: 'Kale plekken doorzaaien', description: 'September is een goede maand om kale plekken bij te zaaien met schaduwgrasmengsel.', tip: 'Zorg voor goed contact tussen zaad en bodem.' },
+    { title: 'Herfstbemesting', description: 'Gebruik een kaliumrijke meststof om het gras winterhard te maken.' },
+    { title: 'Oud gras en blad harken', description: 'Verwijder dode grasresten en afgevallen blad om schimmel te voorkomen.' }
+  ],
+  '10': [
+    { title: 'Bladeren wekelijks weghalen', description: 'In schaduwrijke gebieden is het extra belangrijk om blad te verwijderen om schimmel te voorkomen.' },
+    { title: 'Doorzaaien (tot begin oktober)', description: 'Je kunt nog doorzaaien tot ongeveer midden oktober als het weer meewerkt.' },
+    { title: 'Laatste bemesting', description: 'Geef een laatste bemesting met kalium voor winterhardheid.' }
+  ],
+  '11': [
+    { title: 'Blad verwijderen', description: 'Verwijder afgevallen blad om schimmelvorming en mosgroei te voorkomen.' },
+    { title: 'Laatste maaibeurt op 5 cm', description: 'Geef het gazon een laatste maaibeurt voor de winter.' }
+  ],
+  '12': [
+    { title: 'Gras niet betreden bij vorst', description: 'Betreden van bevroren gras kan de grasmat beschadigen.' },
+    { title: 'Maaier schoonmaken en opbergen', description: 'Maak de handmaaier schoon, vet de bewegende onderdelen en berg deze droog op.' }
+  ]
+};
+
+const state = {
+  settings: {
+    gazontype: 'schaduwgras',
+    aanlegmaand: '05',
+    aanlegjaar: '2024',
+    eersteJaar: true,
+    locatie: 'Zwolle',
+    lat: '52.5168',
+    lon: '6.0830',
+    maaihoogte: 5
+  },
+  weather: null,
+  completedTasks: {},
+  notificationPermission: false
+};
+
+async function fetchWeather() {
+  const { lat, lon, locatie } = state.settings;
+  document.getElementById('weather-location').textContent = locatie;
+
+  try {
+    const currentResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`);
+    if (!currentResponse.ok) throw new Error('Kan weerdata niet ophalen');
+    const currentData = await currentResponse.json();
+
+    const forecastResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_min,temperature_2m_max,precipitation_sum,precipitation_probability_max,windspeed_10m_max&timezone=auto&forecast_days=7`);
+    if (!forecastResponse.ok) throw new Error('Kan weersvoorspelling niet ophalen');
+    const forecastData = await forecastResponse.json();
+
+    state.weather = {
+      current: currentData.current_weather,
+      forecast: forecastData.daily,
+      timestamp: Date.now()
+    };
+
+    renderWeather();
+    renderDailyAdvice();
+    document.getElementById('weather-loading').classList.add('hidden');
+    document.getElementById('weather-error').classList.add('hidden');
+    document.getElementById('weather-data').classList.remove('hidden');
+
+  } catch (error) {
+    console.error('Weer error:', error);
+    document.getElementById('weather-loading').classList.add('hidden');
+    document.getElementById('weather-error').textContent = 'Kan weerdata niet ophalen. De app werkt wel op basis van de maand.';
+    document.getElementById('weather-error').classList.remove('hidden');
+    document.getElementById('weather-data').classList.add('hidden');
+    renderDailyAdvice();
+  }
+}
+
+function renderWeather() {
+  if (!state.weather) return;
+  const weatherDataEl = document.getElementById('weather-data');
+  weatherDataEl.innerHTML = '';
+
+  const current = state.weather.current;
+  const todayForecast = state.weather.forecast;
+  const currentTemp = current.temperature;
+  const todayMin = todayForecast.temperature_2m_min[0];
+  const todayMax = todayForecast.temperature_2m_max[0];
+  const todayPrecip = todayForecast.precipitation_sum[0];
+  const todayPrecipProb = todayForecast.precipitation_probability_max[0];
+  const todayWind = todayForecast.windspeed_10m_max[0];
+  const yesterdayPrecip = todayForecast.precipitation_sum.length > 1 ? todayForecast.precipitation_sum[1] : 0;
+
+  const weatherItems = [
+    { value: currentTemp + '°C', label: 'Nu' },
+    { value: todayMin + '-' + todayMax + '°C', label: 'Vandaag' },
+    { value: todayPrecip + 'mm', label: 'Neerslag' },
+    { value: todayPrecipProb + '%', label: 'Neerslagkans' },
+    { value: todayWind + 'km/h', label: 'Wind' },
+    { value: yesterdayPrecip + 'mm', label: 'Gisteren' }
+  ];
+
+  weatherItems.forEach(function(item) {
+    const div = document.createElement('div');
+    div.className = 'weather-item';
+    div.innerHTML = '<div class="value">' + item.value + '</div><div class="label">' + item.label + '</div>';
+    weatherDataEl.appendChild(div);
+  });
+}
+
+function getWeerAdvies(weatherData) {
+  if (!weatherData) {
+    const currentMonth = new Date().getMonth() + 1;
+    return getSeasonalAdvice(currentMonth);
+  }
+
+  const current = weatherData.current;
+  const todayForecast = weatherData.forecast;
+  const temp = current.temperature;
+  const todayMin = todayForecast.temperature_2m_min[0];
+  const todayMax = todayForecast.temperature_2m_max[0];
+  const precipToday = todayForecast.precipitation_sum[0];
+  const precipProbToday = todayForecast.precipitation_probability_max[0];
+  const precipYesterday = todayForecast.precipitation_sum.length > 1 ? todayForecast.precipitation_sum[1] : 0;
+
+  const advices = [];
+  const currentMonth = new Date().getMonth() + 1;
+  const isEersteJaar = state.settings.eersteJaar && (new Date().getFullYear() - parseInt(state.settings.aanlegjaar) < 1);
+
+  const canMow = temp >= 8 && temp <= 25 && precipToday < 2 && precipYesterday < 2 && todayMin > 0;
+  if (canMow) {
+    advices.push(temp >= 20 ? '✅ Goed weer om te maaien! Doe dit liever in de ochtend of avond.' : '✅ Goed weer om te maaien!');
+  } else {
+    if (temp < 8 || todayMin <= 0) advices.push('❌ Niet maaien: te koud of vorst.');
+    if (precipToday >= 2 || precipYesterday >= 2) advices.push('❌ Niet maaien: te nat.');
+    if (temp > 25) advices.push('❌ Niet maaien: te warm.');
+  }
+
+  if (todayMin <= 0) advices.push('⚠️ Niet betreden: nachtvorst of bevroren gras.');
+
+  const dryDays = countDryDays(todayForecast);
+  if (dryDays >= 3 && todayMax > 18) {
+    const waterAdvice = isEersteJaar ? '💧 Geef water! Bij jonge grasmat is extra water geven belangrijk.' : '💧 Geef water: meerdere droge dagen en warm weer.';
+    advices.push(waterAdvice + " Doe dit 's ochtends, diep en niet te vaak.");
+  }
+
+  const shouldFertilize = temp >= 5 && temp <= 25 && precipToday < 5 && todayMin > 0 && precipProbToday < 60;
+  if (shouldFertilize && (currentMonth === 3 || currentMonth === 9 || currentMonth === 10)) {
+    advices.push('🌱 Ideaal weer om te bemesten! Doen vlak voor lichte regen.');
+  } else if (!shouldFertilize && (currentMonth === 3 || currentMonth === 9 || currentMonth === 10)) {
+    if (todayMin <= 0) advices.push('❌ Niet bemesten: vorst.');
+    if (temp > 25) advices.push('❌ Niet bemesten: te warm.');
+    if (precipToday >= 5 || precipProbToday >= 60) advices.push('❌ Niet bemesten: hevige regen.');
+  }
+
+  if ((currentMonth === 4 || currentMonth === 9 || currentMonth === 10) && temp >= 10 && temp <= 22 && precipToday < 5 && todayMin > 2) {
+    advices.push('🌱 Goed weer om kale plekken door te zaaien!');
+  }
+
+  return advices.length > 0 ? advices.join(' ') : getSeasonalAdvice(currentMonth);
+}
+
+function countDryDays(forecast) {
+  let count = 0;
+  for (let i = 0; i < Math.min(forecast.precipitation_sum.length, 7); i++) {
+    if (forecast.precipitation_sum[i] < 1) count++;
+  }
+  return count;
+}
+
+function getSeasonalAdvice(month) {
+  const adviceMap = {
+    1: 'Winterrust: houd het gazon schoon van blad en takken. Betred het gras niet bij vorst.',
+    2: 'Winterrust: houd het gazon schoon van blad en takken. Betred het gras niet bij vorst.',
+    3: 'Voorjaarsstart: eerste maaibeurt bij droog weer. Verwijder oud gras en blad.',
+    4: 'Groeiperiode: wekelijks maaien en kale plekken doorzaaien. Houd vochtig.',
+    5: 'Actieve groei: wekelijks maaien, onkruid steken en bij droogte water geven.',
+    6: 'Zomer: maaihoogte omhoog, niet maaien in hitte. Water geven bij droogte.',
+    7: 'Zomer: maaihoogte omhoog, niet maaien in hitte. Water geven bij droogte.',
+    8: 'Zomer: maaihoogte omhoog, niet maaien in hitte. Water geven bij droogte.',
+    9: 'Najaar: doorzaaien, herfstbemesting en blad verwijderen.',
+    10: 'Najaar: blad wekelijks weghalen (extra belangrijk in schaduw!). Laatste bemesting.',
+    11: 'Wintervoorbereiding: blad verwijderen en laatste maaibeurt.',
+    12: 'Winter: maaier schoonmaken en opbergen. Niet betreden bij vorst.'
+  };
+  return adviceMap[month] || 'Geen specifiek advies voor deze maand.';
+}
+
+function loadCompletedTasks() {
+  const year = new Date().getFullYear();
+  const saved = localStorage.getItem('gazon_taken_' + year);
+  if (saved) state.completedTasks = JSON.parse(saved);
+}
+
+function saveCompletedTasks() {
+  const year = new Date().getFullYear();
+  localStorage.setItem('gazon_taken_' + year, JSON.stringify(state.completedTasks));
+}
+
+function toggleTask(monthKey, taskIndex) {
+  const taskId = monthKey + '_' + taskIndex;
+  state.completedTasks[taskId] = !state.completedTasks[taskId];
+  saveCompletedTasks();
+  renderCurrentMonthTasks();
+  renderMonthGrid();
+}
+
+function isTaskCompleted(monthKey, taskIndex) {
+  return state.completedTasks[monthKey + '_' + taskIndex] || false;
+}
+
+function renderCurrentMonthTasks() {
+  const currentMonth = new Date().getMonth() + 1;
+  const monthKey = String(currentMonth).padStart(2, '0');
+  const tasks = TASKS_PER_MONTH[monthKey] || [];
+  const container = document.getElementById('current-month-tasks');
+  container.innerHTML = '';
+
+  tasks.forEach(function(task, index) {
+    const li = document.createElement('li');
+    li.className = 'task-item';
+    const completed = isTaskCompleted(monthKey, index);
+    li.innerHTML = '<input type="checkbox" class="task-checkbox" ' + (completed ? 'checked' : '') + ' data-month="' + monthKey + '" data-index="' + index + '">' +
+      '<div class="task-content">' +
+        '<h4>' + task.title + '</h4>' +
+        '<p>' + task.description + '</p>' +
+        (task.tip ? '<p class="tip">Tip: ' + task.tip + '</p>' : '') +
+      '</div>';
+    container.appendChild(li);
+  });
+
+  container.querySelectorAll('.task-checkbox').forEach(function(cb) {
+    cb.addEventListener('change', function(e) {
+      toggleTask(e.target.dataset.month, parseInt(e.target.dataset.index));
+    });
+  });
+}
+
+function renderMonthGrid() {
+  const grid = document.getElementById('month-grid');
+  grid.innerHTML = '';
+  const currentMonth = new Date().getMonth() + 1;
+
+  MONTHS.forEach(function(month) {
+    const card = document.createElement('div');
+    card.className = 'month-card' + (month.key === String(currentMonth).padStart(2, '0') ? ' current' : '');
+    const tasks = TASKS_PER_MONTH[month.key] || [];
+    const completedCount = tasks.filter(function(_, index) { return isTaskCompleted(month.key, index); }).length;
+    card.innerHTML = '<h3>' + month.name + '</h3><p>' + tasks.length + ' taken' + (completedCount > 0 ? ' (' + completedCount + ' gedaan)' : '') + '</p>';
+    card.addEventListener('click', function() { showMonthDetail(month.key); });
+    grid.appendChild(card);
+  });
+}
+
+function showMonthDetail(monthKey) {
+  const month = MONTHS.find(function(m) { return m.key === monthKey; });
+  const tasks = TASKS_PER_MONTH[monthKey] || [];
+  document.getElementById('month-detail-title').textContent = month.name;
+  const container = document.getElementById('month-detail-tasks');
+  container.innerHTML = '';
+
+  tasks.forEach(function(task, index) {
+    const li = document.createElement('li');
+    li.className = 'task-item';
+    const completed = isTaskCompleted(monthKey, index);
+    li.innerHTML = '<input type="checkbox" class="task-checkbox" ' + (completed ? 'checked' : '') + ' data-month="' + monthKey + '" data-index="' + index + '">' +
+      '<div class="task-content">' +
+        '<h4>' + task.title + '</h4>' +
+        '<p>' + task.description + '</p>' +
+        (task.tip ? '<p class="tip">Tip: ' + task.tip + '</p>' : '') +
+      '</div>';
+    container.appendChild(li);
+  });
+
+  container.querySelectorAll('.task-checkbox').forEach(function(cb) {
+    cb.addEventListener('change', function(e) {
+      toggleTask(e.target.dataset.month, parseInt(e.target.dataset.index));
+    });
+  });
+
+  document.getElementById('month-grid').parentElement.classList.add('hidden');
+  document.getElementById('month-detail-card').classList.remove('hidden');
+}
+
+function hideMonthDetail() {
+  document.getElementById('month-grid').parentElement.classList.remove('hidden');
+  document.getElementById('month-detail-card').classList.add('hidden');
+}
+
+function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    showToast('Meldingen worden niet ondersteund door je browser.');
+    return;
+  }
+  Notification.requestPermission().then(function(permission) {
+    if (permission === 'granted') {
+      state.notificationPermission = true;
+      showToast('Meldingen ingeschakeld!');
+      updateNotificationStatus();
+      localStorage.setItem('gazon_notification_permission', 'true');
+      checkAndShowNotifications();
+    } else {
+      showToast('Meldingen niet ingeschakeld.');
+    }
+  });
+}
+
+function updateNotificationStatus() {
+  const statusEl = document.getElementById('notification-status');
+  if (state.notificationPermission) {
+    statusEl.textContent = 'Meldingen: ingeschakeld';
+    document.getElementById('request-notification').classList.add('hidden');
+  } else {
+    statusEl.textContent = '';
+    document.getElementById('request-notification').classList.remove('hidden');
+  }
+}
+
+function updateNotificationCheck() {
+  if (localStorage.getItem('gazon_notification_permission') === 'true') {
+    state.notificationPermission = true;
+    updateNotificationStatus();
+  }
+}
+
+function checkAndShowNotifications() {
+  if (!state.notificationPermission) return;
+  const currentMonth = new Date().getMonth() + 1;
+  const monthKey = String(currentMonth).padStart(2, '0');
+  const tasks = TASKS_PER_MONTH[monthKey] || [];
+  const incompleteTasks = tasks.filter(function(_, index) { return !isTaskCompleted(monthKey, index); });
+  if (incompleteTasks.length > 0 && !sessionStorage.getItem('gazon_notification_shown')) {
+    new Notification('Gazononderhoud: ' + incompleteTasks.length + ' taken voor ' + MONTHS[currentMonth-1].name, { body: 'Klik om de taken te bekijken.' });
+    sessionStorage.setItem('gazon_notification_shown', 'true');
+  }
+}
+
+function exportToICS() {
+  const currentYear = new Date().getFullYear();
+  let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gazononderhoud//NL\n';
+
+  Object.entries(TASKS_PER_MONTH).forEach(function(entry) {
+    const monthKey = entry[0];
+    const tasks = entry[1];
+    const month = MONTHS.find(function(m) { return m.key === monthKey; });
+    if (!month) return;
+    tasks.forEach(function(task, index) {
+      const day = [1, 8, 15, 22][index] || 1;
+      const startDate = currentYear + monthKey + String(day).padStart(2, '0') + 'T090000';
+      icsContent += 'BEGIN:VEVENT\nUID:gazon-' + monthKey + '-' + index + '@gazononderhoud\nDTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').replace(/\./g, '').replace('T', '').replace(/Z$/, 'Z') + '\nDTSTART:' + startDate + '\nRRULE:FREQ=YEARLY\nSUMMARY:' + escapeICS(task.title) + '\nDESCRIPTION:' + escapeICS(task.description) + '\nEND:VEVENT\n';
+    });
+  });
+  icsContent += 'END:VCALENDAR';
+
+  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gazononderhoud_' + currentYear + '.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Agendabestand gedownload!');
+}
+
+function escapeICS(text) {
+  return text.replace(/\\/g, '\\\\').replace(/,/g, '\\,').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/;/g, '\\;');
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input-field');
+  const message = input.value.trim();
+  if (!message) return;
+
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('chat-send').disabled = true;
+  document.getElementById('chat-loading').classList.remove('hidden');
+
+  addChatMessage(message, 'user');
+  const apiKey = localStorage.getItem('gazon_mistral_api_key') || document.getElementById('mistral-api-key').value;
+
+  if (!apiKey) {
+    document.getElementById('api-key-warning').classList.remove('hidden');
+    input.disabled = false;
+    document.getElementById('chat-send').disabled = false;
+    document.getElementById('chat-loading').classList.add('hidden');
+    return;
+  }
+
+  try {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const weatherInfo = state.weather ? 'Temperatuur: ' + state.weather.current.temperature + '°C, ' + state.weather.forecast.precipitation_sum[0] + 'mm regen vandaag.' : 'Weerdata niet beschikbaar.';
+    const tasksThisMonth = TASKS_PER_MONTH[String(currentMonth).padStart(2, '0')] || [];
+    const tasksSummary = tasksThisMonth.map(function(t) { return t.title; }).join(', ');
+    const context = 'Huidige datum: ' + currentDate.toLocaleDateString('nl-NL') + '. Locatie: ' + state.settings.locatie + '. Gazontype: ' + state.settings.gazontype + '. ' + (state.settings.eersteJaar ? 'EERSTE JAAR. ' : '') + 'Weer: ' + weatherInfo + ' Taken deze maand: ' + (tasksSummary || 'geen') + '.';
+
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey
+      },
+      body: JSON.stringify({
+        model: 'mistral-small-latest',
+        messages: [
+          { role: 'system', content: 'Je bent een deskundige gazonadviseur. Geef korte, praktische antwoorden in het Nederlands (max 3-4 zinnen). Context: ' + context + '. Beantwoord alleen vragen over gazononderhoud.' },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.3,
+        max_tokens: 200
+      })
+    });
+
+    if (!response.ok) throw new Error('API fout: ' + response.status);
+    const data = await response.json();
+    addChatMessage(data.choices[0].message.content, 'assistant');
+
+  } catch (error) {
+    addChatMessage('Sorry, ik kon geen antwoord krijgen. Fout: ' + error.message + '. Controleer je API-sleutel.', 'assistant');
+  } finally {
+    input.disabled = false;
+    document.getElementById('chat-send').disabled = false;
+    document.getElementById('chat-loading').classList.add('hidden');
+  }
+}
+
+function addChatMessage(message, type) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-message ' + type;
+  div.textContent = message;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function loadSettings() {
+  const saved = localStorage.getItem('gazon_settings');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      for (const key in parsed) state.settings[key] = parsed[key];
+    } catch (e) {}
+  }
+  document.getElementById('gazontype').value = state.settings.gazontype;
+  document.getElementById('aanlegmaand').value = state.settings.aanlegmaand;
+  document.getElementById('aanlegjaar').value = state.settings.aanlegjaar;
+  document.getElementById('eerste-jaar').checked = state.settings.eersteJaar;
+  document.getElementById('locatie').value = state.settings.locatie;
+  document.getElementById('lat').value = state.settings.lat;
+  document.getElementById('lon').value = state.settings.lon;
+  document.getElementById('maaihoogte').value = state.settings.maaihoogte;
+
+  const apiKey = localStorage.getItem('gazon_mistral_api_key');
+  if (apiKey) document.getElementById('mistral-api-key').value = '**********';
+
+  updateChatInputState();
+}
+
+function saveSettings() {
+  state.settings.gazontype = document.getElementById('gazontype').value;
+  state.settings.aanlegmaand = document.getElementById('aanlegmaand').value;
+  state.settings.aanlegjaar = document.getElementById('aanlegjaar').value;
+  state.settings.eersteJaar = document.getElementById('eerste-jaar').checked;
+  state.settings.locatie = document.getElementById('locatie').value;
+  state.settings.lat = document.getElementById('lat').value;
+  state.settings.lon = document.getElementById('lon').value;
+  state.settings.maaihoogte = parseFloat(document.getElementById('maaihoogte').value);
+
+  localStorage.setItem('gazon_settings', JSON.stringify(state.settings));
+  const apiKey = document.getElementById('mistral-api-key').value;
+  if (apiKey && apiKey !== '**********') localStorage.setItem('gazon_mistral_api_key', apiKey);
+
+  document.getElementById('settings-saved').classList.remove('hidden');
+  setTimeout(function() { document.getElementById('settings-saved').classList.add('hidden'); }, 2000);
+  fetchWeather();
+  updateChatInputState();
+  renderCurrentMonthTasks();
+  renderMonthGrid();
+}
+
+function updateChatInputState() {
+  const apiKey = localStorage.getItem('gazon_mistral_api_key') || document.getElementById('mistral-api-key').value;
+  const input = document.getElementById('chat-input-field');
+  const sendBtn = document.getElementById('chat-send');
+  if (apiKey && apiKey !== '**********') {
+    input.disabled = false;
+    sendBtn.disabled = false;
+    document.getElementById('api-key-warning').classList.add('hidden');
+  } else {
+    input.disabled = true;
+    sendBtn.disabled = true;
+    document.getElementById('api-key-warning').classList.remove('hidden');
+  }
+}
+
+function resetTasks() {
+  if (confirm('Weet je zeker dat je alle afgevinkte taken wilt resetten?')) {
+    state.completedTasks = {};
+    saveCompletedTasks();
+    renderCurrentMonthTasks();
+    renderMonthGrid();
+    showToast('Taken gereset!');
+  }
+}
+
+function renderDailyAdvice() {
+  document.getElementById('advice-text').textContent = getWeerAdvies(state.weather);
+}
+
+function updateCurrentMonthDisplay() {
+  const currentMonth = new Date().getMonth() + 1;
+  document.getElementById('current-month-name').textContent = MONTHS[currentMonth - 1].name;
+}
+
+function showToast(message, duration) {
+  if (duration === undefined) duration = 3000;
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, duration);
+}
+
+function initTabs() {
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+      if (tab.dataset.tab === 'jaar') renderMonthGrid();
+    });
+  });
+}
+
+function init() {
+  loadSettings();
+  loadCompletedTasks();
+  updateNotificationCheck();
+  updateCurrentMonthDisplay();
+  initTabs();
+  renderCurrentMonthTasks();
+  renderMonthGrid();
+  fetchWeather();
+
+  document.getElementById('request-notification').addEventListener('click', requestNotificationPermission);
+  document.getElementById('export-ics').addEventListener('click', exportToICS);
+  document.getElementById('save-settings').addEventListener('click', saveSettings);
+  document.getElementById('reset-tasks').addEventListener('click', resetTasks);
+  document.getElementById('back-to-overview').addEventListener('click', hideMonthDetail);
+  document.getElementById('chat-send').addEventListener('click', sendChatMessage);
+  document.getElementById('chat-input-field').addEventListener('keypress', function(e) { if (e.key === 'Enter') sendChatMessage(); });
+  document.getElementById('mistral-api-key').addEventListener('input', updateChatInputState);
+  setTimeout(checkAndShowNotifications, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+setInterval(fetchWeather, 30 * 60 * 1000);
+</script>
+
+</body>
+</html>
